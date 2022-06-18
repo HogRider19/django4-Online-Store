@@ -1,0 +1,55 @@
+{% extends "shop/base.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+<div class="row justify-content-center mb-3">
+    <div class="col-md-9 text-center">
+        <h1 id="hometext" class="font-weight-bold">На этой странице вы можете выбрать товар и купить его)</h1>
+    </div>
+</div>
+
+<h2 class="mt-5">Магазин</h2>
+<hr>
+<div class="row">
+    {% for product in products %}
+    <div class="col-lg-4 col-md-6">
+
+        {% if product.url %}
+        <a href="{{ project.url }}">
+            <img src="{{ project.image.url }}" class="img-fluid mb-2">
+        </a>
+        {% else %}
+
+        <img src="{{ product.image.url }}" class="img-fluid mb-2">
+        {% endif %}
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description }}</p>
+
+    </div>
+    {% endfor %}
+</div>
+
+<nav aria-label="Pagination">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled">
+            <a class="page-link" href="https://www.webnots.com/bootstrap-pagination-tutorial/#"
+                tabindex="-1">&laquo;</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="https://www.webnots.com/bootstrap-pagination-tutorial/#">1</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="https://www.webnots.com/bootstrap-pagination-tutorial/#">2</a>
+        </li>
+        <li class="page-item"><a class="page-link" href="https://www.webnots.com/bootstrap-pagination-tutorial/#">3</a>
+        </li>
+        <li class="page-item">
+            <a class="page-link" href="https://www.webnots.com/bootstrap-pagination-tutorial/#">&raquo;</a>
+        </li>
+    </ul>
+</nav>
+
+
+
+{% endblock %}
