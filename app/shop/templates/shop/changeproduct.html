@@ -1,0 +1,58 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        <h2>Новый товар</h2>
+    </div>
+</div>
+<div class="row justify-content-center mt-5">
+    <div class="col-md-5">
+        {% if error %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="name">Заголовок</label>
+                <input type="text" name="name" class="form-control" value="{{info.name}}" id="name" required >
+            </div>
+            <div class="form-group">
+                <label for="description">Описание</label>
+                <input name="description" class="form-control" id="description" value="{{info.description}}" ></input>
+            </div>
+            <div class="form-group">
+                <label for="image">Изображение</label>
+                {% if info.image %}
+                <p><input type="file" id="image" name="image" value="{{info.image}}">
+                {% else %}
+                <p><input type="file" id="image" name="image">
+                {% endif %}
+            </div>
+            <div class="form-group">
+                <label for="price">Цена</label>
+                <input type="number" id="price" name="price" value="{{info.price}}">
+            </div>
+            <div class="form-group">
+                <label for="count_sell">Количество</label>
+                <input type="number" id="count_sell" name="count_sell" value="{{info.count_sell}}">
+            </div>
+            <div class="form-group">
+                <label for="category">Каткгория</label>
+                <select name="category">
+                    {% for categ in category %}
+                    {% if categ.id == info.category.id %}
+                        <option value="{{categ.id}}" selected="selected">{{categ.name}}</option>
+                    {% else %}
+                    <option value="{{categ.id}}">{{categ.name}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

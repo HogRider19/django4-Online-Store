@@ -1,5 +1,5 @@
 from itertools import product
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, get_list_or_404
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -24,26 +24,69 @@ def userorders(request, user_id):
     pass
 
 
+def viewproduct(request, product_id):
+    product = Product.objects.get(pk = product_id)
+    product_user_id = product.user.id
+    is_change = True if request.user.id == product_user_id else False
+    return render(request, 'shop/viewproduct.html', {'product': product, 'is_change':is_change})
+
+
+def changeproduct(request, product_id):
+    product = get_object_or_404(Product, pk = product_id, user = request.user)
+    if request.method == 'GET':
+        category = Category.objects.all()
+        info = {
+            'name':product.name,
+            'description':product.description,
+            'count_sell':product.count_sell,
+            'image':product.image,
+            'price':int(product.price),
+            'category':product.category
+        }
+        return render(request, 'shop/changeproduct.html', {'info':info, 'category':category})
+    else:
+        try:
+            rg = request.POST
+            product.name = rg['name']
+            product.description = rg['description']
+            if rg['image'] != '':
+                print(rg['image'])
+                product.image = rg['image']
+            product.price = rg['price']
+            product.count_sell = rg['count_sell']
+            product.category = Category.objects.get(pk = rg['category'])
+            product.user = request.user
+            product.save()
+            return redirect('home')
+        except ValueError:
+            return render(request, 'shop/changeproduct.html', {'form':ProductForm(), 'error':'Некорректные данные'})
+
+def dropproduct(request, product_id):
+    product = get_object_or_404(Product, pk = product_id, user = request.user)
+    product.delete()
+    return redirect('home')
+
+
 @login_required
 def createproduct(request):
     if request.method == 'GET':
         category = Category.objects.all()
         return render(request, 'shop/createproduct.html', {'form':ProductForm(), 'category':category})
     else:
-        #try:
-        rg = request.POST
-        newProduct = Product()
-        newProduct.name = rg['name']
-        newProduct.description = rg['description']
-        newProduct.image = rg['image']
-        newProduct.price = rg['price']
-        newProduct.count_sell = rg['count_sell']
-        newProduct.category = Category.objects.get(pk = rg['category'])
-        newProduct.user = request.user
-        newProduct.save()
-        return redirect('home')
-        #except ValueError:
-        #    return render(request, 'shop/createproduct.html', {'form':ProductForm(), 'error':'Некорректные данные'})
+        try:
+            rg = request.POST
+            newProduct = Product()
+            newProduct.name = rg['name']
+            newProduct.description = rg['description']
+            newProduct.image = rg['image']
+            newProduct.price = rg['price']
+            newProduct.count_sell = rg['count_sell']
+            newProduct.category = Category.objects.get(pk = rg['category'])
+            newProduct.user = request.user
+            newProduct.save()
+            return redirect('home')
+        except ValueError:
+            return render(request, 'shop/createproduct.html', {'form':ProductForm(), 'error':'Некорректные данные'})
 
 
 def signupuser(request):

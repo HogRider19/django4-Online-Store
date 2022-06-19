@@ -1,0 +1,30 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="container text-center">
+    <h1>Просмотр товара</h1>
+    {% if product.image %}
+    <img src="{{ product.image.url }}" class="img-fluid mb-2">
+    {% else %}
+    <img src="/media/noPhoto.jpg" class="img-fluid mb-2">
+    {% endif %}
+    <h1>{{ product.name }}</h1>
+    <p>Каткгория: {{ product.category }}</p>
+    <p>Автор:{{ product.user }}</p>
+    <p>{{ product.description }}</p>
+    <p>{{ product.price }} руб.</p>
+    <p>Осталось в наличии {{product.count_sell}}</p>
+    {% if is_change %}
+    <ul class="pagination justify-content-center">
+        <form method="GET" action="{% url 'changeproduct' product.id %}">
+            {% csrf_token %}
+            <button id="complete" type="submit" class="btn btn-success">Изменить</button>
+        </form>
+        <form method="POST" action="{% url 'dropproduct' product.id %}">
+            {% csrf_token %}
+            <button id="complete" type="submit" class="btn btn-danger">Удалить</button>
+        </form>
+    </ul>
+    {% endif %}
+</div>
+{% endblock %}
