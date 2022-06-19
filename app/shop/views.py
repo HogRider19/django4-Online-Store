@@ -7,6 +7,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
 from .models import Product, Category
 from .forms import ProductForm
+from cart.cart import Cart
 
 def home(request):
     page = int(request.GET.get('page', 1))
@@ -22,6 +23,19 @@ def home(request):
 @login_required
 def userorders(request, user_id):
     pass
+
+
+def viewcart(request):
+    cart = Cart(request)
+    return render(request, 'shop/viewcart.html', {'cart':cart, 'info':{'count':len(cart)}})
+
+
+def addcart(request, product_id):
+    product = Product.objects.get(pk = product_id)
+    cart = Cart(request)
+    cart.add(product)
+    cart.save()
+    return redirect('home')
 
 
 def viewproduct(request, product_id):

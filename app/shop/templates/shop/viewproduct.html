@@ -25,6 +25,13 @@
             <button id="complete" type="submit" class="btn btn-danger">Удалить</button>
         </form>
     </ul>
+    {% else %}
+    <ul class="pagination justify-content-center">
+        <form method="GET" action="{% url 'addcart' product.id %}">
+            {% csrf_token %}
+            <button id="complete" type="submit" class="btn btn-success">В корзину</button>
+        </form>
+    </ul>
     {% endif %}
 </div>
 {% endblock %}
