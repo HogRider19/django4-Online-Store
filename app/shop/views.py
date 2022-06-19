@@ -19,10 +19,12 @@ def home(request):
     return render(request, 'shop/home.html',{'products':products, 'pageinfo':{'next': nextPage, 'previous': previousPage}})
 
 
+@login_required
 def userorders(request, user_id):
     pass
 
 
+@login_required
 def createproduct(request):
     if request.method == 'GET':
         category = Category.objects.all()

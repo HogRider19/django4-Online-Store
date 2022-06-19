@@ -25,8 +25,9 @@
 
         <img src="{{ product.image.url }}" class="img-fluid mb-2">
         {% endif %}
-        <h3>{{ product.name }}</h3>
+        <h3>{{ product.name }}--{{ product.category }}</h3>
         <p>{{ product.description }}</p>
+        <p>Автор - {{ product.user }}</p>
 
     </div>
     {% endfor %}

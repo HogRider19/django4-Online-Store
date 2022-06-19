@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
 
 
 class Category(models.Model):
@@ -19,6 +20,7 @@ class Product(models.Model):
     count_sell = models.IntegerField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     discount = models.FloatField(default=0)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.name
