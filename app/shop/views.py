@@ -5,12 +5,18 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.db import IntegrityError
-from .models import Product
+from .models import Product, Category
 from .forms import ProductForm
 
 def home(request):
-    products = Product.objects.filter()
-    return render(request, 'shop/home.html',{'products':products})
+    page = int(request.GET.get('page', 1))
+
+    previousPage = page - 1 if page != 1 else 1
+    nextPage = page + 1
+
+    products = Product.objects.all()[(page-1)*9:(page-1)*9+9]
+
+    return render(request, 'shop/home.html',{'products':products, 'pageinfo':{'next': nextPage, 'previous': previousPage}})
 
 
 def userorders(request, user_id):
@@ -19,16 +25,17 @@ def userorders(request, user_id):
 
 def createproduct(request):
     if request.method == 'GET':
-        return render(request, 'shop/createproduct.html', {'form':ProductForm()})
+        category = Category.objects.all()
+        return render(request, 'shop/createproduct.html', {'form':ProductForm(), 'category':category})
     else:
-        try:
-            form = ProductForm(request.POST)
-            newProduct = form.save(commit = False)
-            newProduct.user = request.user
-            newProduct.save()
-            return redirect('home')
-        except ValueError:
-            return render(request, 'shop/createproduct.html', {'form':ProductForm(), 'error':'Некорректные данные'})
+        #try:
+        form = ProductForm(request.POST)
+        newProduct = form.save(commit = False)
+        newProduct.user = request.user
+        newProduct.save()
+        return redirect('home')
+        #except ValueError:
+        #    return render(request, 'shop/createproduct.html', {'form':ProductForm(), 'error':'Некорректные данные'})
 
 
 def signupuser(request):

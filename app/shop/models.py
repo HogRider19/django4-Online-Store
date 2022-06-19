@@ -16,7 +16,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, related_name='products', on_delete=models.CASCADE)
     price = models.FloatField()
     image = models.ImageField()
-    count_sell = models.IntegerField()
+    count_sell = models.IntegerField(blank=True)
     created = models.DateTimeField(auto_now_add=True)
     discount = models.FloatField(default=0)
 
