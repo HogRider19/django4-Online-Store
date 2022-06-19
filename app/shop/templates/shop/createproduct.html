@@ -17,29 +17,29 @@
             {% csrf_token %}
             <div class="form-group">
                 <label for="name">Заголовок</label>
-                <input type="text" name="title" class="form-control" id="title" required>
+                <input type="text" name="name" class="form-control" id="name" required>
             </div>
             <div class="form-group">
                 <label for="description">Описание</label>
-                <textarea name="" class="form-control" id="description" ></textarea>
+                <textarea name="description" class="form-control" id="description" ></textarea>
             </div>
             <div class="form-group">
                 <label for="image">Изображение</label>
-                <p><input type="file" id="image" name="f">
+                <p><input type="file" id="image" name="image">
             </div>
             <div class="form-group">
                 <label for="price">Цена</label>
-                <input type="number" id="price">
+                <input type="number" id="price" name="price">
             </div>
             <div class="form-group">
                 <label for="count_sell">Количество</label>
-                <input type="number" id="price">
+                <input type="number" id="count_sell" name="count_sell">
             </div>
             <div class="form-group">
                 <label for="category">Каткгория</label>
-                <select name = "length">
+                <select name = "category">
                     {% for categ in category %}
-                        <option value="{{categ}}" selected="selected">{{categ.name}}</option>
+                        <option value="{{categ.id}}" selected="selected">{{categ.name}}</option>
                     {% endfor %}
                 </select>
             </div>

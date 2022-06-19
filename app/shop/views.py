@@ -29,8 +29,14 @@ def createproduct(request):
         return render(request, 'shop/createproduct.html', {'form':ProductForm(), 'category':category})
     else:
         #try:
-        form = ProductForm(request.POST)
-        newProduct = form.save(commit = False)
+        rg = request.POST
+        newProduct = Product()
+        newProduct.name = rg['name']
+        newProduct.description = rg['description']
+        newProduct.image = rg['image']
+        newProduct.price = rg['price']
+        newProduct.count_sell = rg['count_sell']
+        newProduct.category = Category.objects.get(pk = rg['category'])
         newProduct.user = request.user
         newProduct.save()
         return redirect('home')
