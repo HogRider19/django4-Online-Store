@@ -33,14 +33,6 @@ class Cart(object):
         self.session.modified = True
 
 
-        """
-        product_ids = self.cart.keys()
-        products = Product.objects.filter(id__in=product_ids)
-        for product in products:
-            if self.cart[str(product.id)]['quantity'] <= 0:
-                del self.cart[product.id]
-        """
-
     def check_for_correctness(self):
         product_ids = self.cart.keys()
         products = Product.objects.filter(id__in=product_ids)

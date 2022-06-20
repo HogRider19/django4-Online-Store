@@ -20,11 +20,6 @@ def home(request):
     return render(request, 'shop/home.html',{'products':products, 'pageinfo':{'next': nextPage, 'previous': previousPage}})
 
 
-@login_required
-def userorders(request, user_id):
-    pass
-
-
 def clearcart(request):
     cart = Cart(request)
     cart.clear()
@@ -32,6 +27,16 @@ def clearcart(request):
 
 
 def buycart(request):
+    cart = Cart(request)
+    product_ids = cart.cart.keys()
+    for product_id in product_ids:
+        product = Product.objects.get(pk = product_id)
+        product.count_sell -= cart.cart[product_id]['quantity']
+        if product.count_sell <= 0:
+            product.delete()
+            continue
+        product.save()
+    cart.clear()
     return redirect('home')
 
 
