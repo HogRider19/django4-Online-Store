@@ -12,21 +12,42 @@ class Cart(object):
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
 
-    def add(self, product, quantity=1, update_quantity=False):
+    def add(self, product, quantity=1, update_quantity=False, maxcount = None):
         product_id = str(product.id)
         if product_id not in self.cart:
             self.cart[product_id] = {'quantity': 0,
-                                    'price': str(product.price)}
+                                    'price': str(product.price),
+                                    'maxcount': maxcount}
         if update_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
-            self.cart[product_id]['quantity'] += quantity
+            if self.cart[product_id]['maxcount'] is None: 
+                self.cart[product_id]['quantity'] += quantity
+            elif self.cart[product_id]['quantity'] < self.cart[product_id]['maxcount'] or quantity <= 0:
+                self.cart[product_id]['quantity'] += quantity
         self.save()
 
 
     def save(self):
         self.session[settings.CART_SESSION_ID] = self.cart
         self.session.modified = True
+
+
+        """
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+        for product in products:
+            if self.cart[str(product.id)]['quantity'] <= 0:
+                del self.cart[product.id]
+        """
+
+    def check_for_correctness(self):
+        product_ids = self.cart.keys()
+        products = Product.objects.filter(id__in=product_ids)
+        for product in products:
+            if self.cart[str(product.id)]['quantity'] <= 0:
+                del self.cart[str(product.id)]
+        self.save()
 
 
     def remove(self, product):

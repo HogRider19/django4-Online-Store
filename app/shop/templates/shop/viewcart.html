@@ -8,21 +8,51 @@
             <tr>
                 <th scope="col">#</th>
                 <th scope="col">Название</th>
+                <th scope="col">Категория</th>
                 <th scope="col">Цена</th>
                 <th scope="col">Количество</th>
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
             {% for product in cart %}
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{forloop.counter}}</th>
                 <td>{{product.product.name}}</td>
+                <td>{{product.product.category}}</td>
                 <td>{{product.price}}</td>
                 <td>{{product.quantity}}</td>
+                <td>
+                    <ul class="pagination justify-content-center">
+                        <form method="POST" action="{% url 'changecart' product.product.id 0 %}">
+                            {% csrf_token %}
+                            <button id="complete" type="submit" class="btn btn-info">Убрать</button>
+                        </form>
+                        <form method="POST" action="{% url 'changecart' product.product.id 1 %}">
+                            {% csrf_token %}
+                            <button id="complete" type="submit" class="btn btn-primary">Добавить</button>
+                        </form>
+                        <form method="POST" action="{% url 'changecart' product.product.id 2 %}">
+                            {% csrf_token %}
+                            <button id="complete" type="submit" class="btn btn-danger">Удалить</button>
+                        </form>
+                    </ul>
+                </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
     <h4>Суммарная стоимость: {{cart.get_total_price}}</h4>
+    <br>
+    <ul class="pagination justify-content-center">
+        <form method="POST" action="{% url 'buycart' %}">
+            {% csrf_token %}
+            <button id="complete" type="submit" class="btn btn-success">Купить</button>
+        </form>
+        <form method="POST" action="{% url 'clearcart' %}">
+            {% csrf_token %}
+            <button id="complete" type="submit" class="btn btn-danger">Очистить</button>
+        </form>
+    </ul>
 </div>
 {% endblock %}

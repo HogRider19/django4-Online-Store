@@ -13,6 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from xml.etree.ElementInclude import include
 from django.contrib import admin
 from django.urls import path
 from shop import views
@@ -27,8 +28,11 @@ urlpatterns = [
     path('viewproduct<int:product_id>/', views.viewproduct, name='viewproduct'),
     path('dropproduct<int:product_id>/', views.dropproduct, name='dropproduct'),
     path('changeproduct<int:product_id>/', views.changeproduct, name='changeproduct'),
-    path('addcart<int:product_id>', views.addcart, name='addcart'),
-    path('viewcart', views.viewcart, name = 'viewcart'),
+    path('addcart<int:product_id>/', views.addcart, name='addcart'),
+    path('viewcart/', views.viewcart, name = 'viewcart'),
+    path('clearcart/', views.clearcart, name = 'clearcart'),
+    path('buycart/', views.buycart, name = 'buycart'),
+    path('changecart<int:product_id><int:is_raise>', views.changecart, name = 'changecart'),
 
     path('signup/', views.signupuser, name = 'signup'),
     path('logout', views.logoutuser, name = 'logout'),

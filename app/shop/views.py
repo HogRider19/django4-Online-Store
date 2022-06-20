@@ -25,6 +25,16 @@ def userorders(request, user_id):
     pass
 
 
+def clearcart(request):
+    cart = Cart(request)
+    cart.clear()
+    return redirect('viewcart')
+
+
+def buycart(request):
+    return redirect('home')
+
+
 def viewcart(request):
     cart = Cart(request)
     return render(request, 'shop/viewcart.html', {'cart':cart, 'info':{'count':len(cart)}})
@@ -33,9 +43,23 @@ def viewcart(request):
 def addcart(request, product_id):
     product = Product.objects.get(pk = product_id)
     cart = Cart(request)
-    cart.add(product)
+    cart.add(product, maxcount=int(product.count_sell))
     cart.save()
     return redirect('home')
+
+
+def changecart(request, product_id, is_raise):
+    product = Product.objects.get(pk = product_id)
+    cart = Cart(request)
+    if int(is_raise) == 1:
+        cart.add(product)
+    elif int(is_raise) == 0:
+        cart.add(product, quantity=-1)
+        cart.check_for_correctness()
+    else:
+        cart.remove(product)
+
+    return redirect('viewcart')
 
 
 def viewproduct(request, product_id):
